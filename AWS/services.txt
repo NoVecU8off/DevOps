@@ -1,42 +1,77 @@
-1. Вычисления и контейнеризация:
-EC2: виртуальные серверы для запуска Rust-приложений
-ECS/EKS: оркестрация контейнеров для микросервисной архитектуры
-Lambda: serverless функции для обработки транзакций и событий
-Fargate: serverless контейнеры
-ECR: registry для хранения Docker образов
+1. Вычисления и контейнеризация
+EC2: виртуальные серверы с dedicated hosts для regulatory compliance
+ECS/EKS: оркестрация контейнеров с AWS Fargate для serverless containers
+Lambda: serverless функции с VPC support для secure transaction processing
+Batch: managed batch computing для end-of-day financial calculations
+ECR: private registry с vulnerability scanning и image signing
+App Runner: fully managed containerized applications с auto-scaling
 
-2. Базы данных:
-RDS: реляционные БД для финансовых данных и ACID транзакций
-DynamoDB: NoSQL для высокочастотной торговли и real-time данных
-DocumentDB: для хранения сложных финансовых документов и JSON структур
-ElastiCache: кэширование для низкой латентности
+2. Базы данных и хранение
+RDS: managed PostgreSQL/MySQL с Multi-AZ deployment и read replicas
+Aurora: cloud-native database с global database для cross-region replication
+DynamoDB: NoSQL для high-frequency trading data с DAX for microsecond latency
+DocumentDB: MongoDB-compatible для complex financial documents
+ElastiCache: Redis/Memcached caching с cluster mode и encryption
+QLDB: immutable ledger database для audit trails и transaction logs
+Timestream: time-series database для market data и IoT financial sensors
 
-3. Безопасность:
-IAM: управление доступами
-KMS: управление ключами шифрования
-GuardDuty: обнаружение угроз
-Secrets Manager: безопасное хранение API ключей и токенов
-AWS WAF: защита веб-приложений от атак
+3. Безопасность и идентификация
+IAM: fine-grained access control с ABAC (Attribute-Based Access Control)
+Cognito: customer identity management с fraud detection
+KMS: key management с HSM support и FIPS 140-2 Level 3 validation
+GuardDuty: AI-powered threat detection с financial fraud patterns
+Secrets Manager: automatic secret rotation с cross-region replication
+AWS WAF: managed rules для financial application protection
+Certificate Manager: SSL/TLS certificate automation с private CA
+Cloud HSM: dedicated hardware security modules для highest security requirements
+Detective: security investigation с ML-based analysis
+Macie: data discovery и classification для PII protection
 
-4. Сеть и API:
-API Gateway: управление API
-CloudFront: CDN для глобального доступа
-VPC: изолированные сетевые среды
-Load Balancers: распределение нагрузки (ALB/NLB)
-Auto Scaling: автоматическое масштабирование
+4. Сеть и доставка контента
+VPC: isolated networking с PrivateLink for secure service connections
+Route 53: DNS with health checks и latency-based routing
+CloudFront: global CDN с real-time logs и security headers
+API Gateway: managed API platform с throttling и caching
+Load Balancers: ALB/NLB с SSL termination и cross-zone load balancing
+Direct Connect: dedicated network connection для low-latency trading
+Transit Gateway: network hub для complex multi-VPC architectures
+Global Accelerator: improved application performance via AWS backbone
 
-5. Данные и аналитика:
-Kinesis: потоковая обработка данных
-Redshift: хранилище данных для аналитики
-Glue: ETL для обработки больших объемов данных
-QuickSight: бизнес-аналитика
+5. Данные и аналитика
+Kinesis: real-time data streaming для market data processing
+MSK: managed Apache Kafka для high-throughput messaging
+Redshift: data warehouse с columnar storage для regulatory reporting
+EMR: big data processing с Apache Spark for risk calculations
+Glue: ETL service с data catalog для data governance
+Athena: serverless SQL queries против S3 data lakes
+QuickSight: business intelligence с embedded analytics
+Data Pipeline: workflow orchestration для complex data processing
+Lake Formation: data lake setup с fine-grained access control
 
-6. Интеграции и сообщения:
-EventBridge: событийно-ориентированная архитектура
-SQS: очереди сообщений для надежной обработки
-SNS: уведомления и pub/sub паттерн
+6. Интеграции и обмен сообщениями
+EventBridge: event-driven architecture с schema registry
+SQS: message queuing с FIFO queues для ordered processing
+SNS: pub/sub messaging с message filtering
+Step Functions: serverless workflow orchestration
+AppFlow: secure data transfer между SaaS applications и AWS
+MQ: managed message brokers (ActiveMQ, RabbitMQ)
 
-7. Мониторинг и логирование:
-CloudWatch: метрики и мониторинг
-CloudTrail: аудит API вызовов
-AWS Config: compliance и конфигурационный аудит
+7. Мониторинг и управление
+CloudWatch: metrics, logs, и alarms с custom dashboards
+X-Ray: distributed tracing для microservices performance analysis
+CloudTrail: API audit logging с tamper-evident log files
+Config: resource compliance monitoring с automatic remediation
+Systems Manager: operational data и automation
+Personal Health Dashboard: personalized service health information
+Trusted Advisor: cost optimization и security recommendations
+Well-Architected Tool: architectural best practices assessment
+
+8. FinTech-специфичные сервисы
+AWS Marketplace: third-party financial data feeds и solutions
+Ground Station: satellite data downlink для alternative data sources
+Braket: quantum computing для advanced risk modeling
+Fraud Detector: ML-based fraud detection с pre-built models
+Forecast: demand forecasting с ML algorithms
+Personalize: recommendation engine для financial products
+Textract: document processing для regulatory forms
+Comprehend: NLP для sentiment analysis of financial news

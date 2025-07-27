@@ -1,48 +1,73 @@
-1. Вычисления и контейнеризация:
-Virtual Machines: виртуальные серверы для запуска Rust-приложений
-Container Instances/AKS: оркестрация контейнеров для микросервисной архитектуры
-Azure Functions: serverless функции для обработки транзакций и событий
-Container Instances: serverless контейнеры без управления кластером
-Container Registry: registry для хранения Docker образов с vulnerability scanning
+1. Вычисления и контейнеризация
+Virtual Machines: comprehensive VM sizes с confidential computing
+AKS: managed Kubernetes с Azure AD integration и network policies
+Container Instances: serverless containers с virtual network integration
+Azure Functions: serverless computing с premium plans для guaranteed performance
+Container Registry: enterprise registry с geo-replication и vulnerability scanning
+Batch: large-scale parallel processing для quantitative analysis
+Service Fabric: microservices platform с reliable services
 
-2. Базы данных:
-Azure Database for PostgreSQL: реляционные БД для финансовых данных и ACID транзакций
-Cosmos DB: NoSQL для высокочастотной торговли и real-time данных с global distribution
-Cosmos DB (MongoDB API): для хранения сложных финансовых документов и JSON структур
-Azure Cache for Redis: кэширование для низкой латентности с persistence options
+2. Базы данных и хранение
+Azure Database for PostgreSQL: managed PostgreSQL с Hyperscale option
+Cosmos DB: globally distributed NoSQL с multiple consistency levels
+SQL Database: managed SQL Server с intelligent insights
+Azure Cache for Redis: fully managed Redis с persistence options
+Table Storage: NoSQL key-value store для large datasets
+Azure Data Explorer: fast analytics на large datasets
+Managed Instance: SQL Server compatibility в cloud
 
-3. Безопасность:
-Azure Active Directory + RBAC: управление доступами с enterprise интеграцией
-Key Vault: управление ключами шифрования, сертификатами и секретами
-Microsoft Defender for Cloud: обнаружение угроз и vulnerability assessment
-Key Vault: безопасное хранение API ключей и токенов с HSM support
-Web Application Firewall: защита веб-приложений от атак с managed rule sets
+3. Безопасность и идентификация
+Azure AD: enterprise identity platform с conditional access
+Key Vault: secrets, keys, и certificates management с HSM support
+Azure Sentinel: cloud-native SIEM с AI-powered analysis
+Microsoft Defender for Cloud: unified security management
+Application Gateway: WAF с OWASP rule sets
+Azure Firewall: managed network security с threat intelligence
+Privileged Identity Management: just-in-time access control
+Azure Information Protection: data classification и protection
 
-4. Сеть и API:
-API Management: управление API с developer portal и monetization
-Azure CDN: CDN для глобального доступа с Microsoft edge locations
-Virtual Network: изолированные сетевые среды с service endpoints
-Application Gateway/Load Balancer: распределение нагрузки с SSL termination
-Virtual Machine Scale Sets/Autoscale: автоматическое масштабирование
+4. Сеть и доставка контента
+Virtual Network: isolated networking с service endpoints
+Azure CDN: global content delivery с real-time analytics
+Traffic Manager: DNS-based load balancing с performance routing
+API Management: full lifecycle API management с developer portal
+Load Balancer: layer 4 load balancing с high availability
+ExpressRoute: private connectivity to Azure с up to 100 Gbps
+VPN Gateway: site-to-site и point-to-site connectivity
+Azure Front Door: global load balancer с WAF integration
 
-5. Данные и аналитика:
-Event Hubs/Stream Analytics: потоковая обработка данных в real-time
-Azure Synapse Analytics: хранилище данных для аналитики с Apache Spark
-Data Factory: ETL для обработки больших объемов данных с 90+ connectors
-Power BI: бизнес-аналитика с native Office 365 интеграцией
+5. Данные и аналитика
+Event Hubs: big data streaming platform с Apache Kafka compatibility
+Stream Analytics: real-time analytics с SQL-like queries
+Synapse Analytics: enterprise data warehouse с Apache Spark
+Data Factory: data integration с 90+ connectors
+Power BI: business analytics с natural language queries
+HDInsight: managed Hadoop, Spark, и Kafka clusters
+Data Lake Analytics: on-demand analytics jobs
+Purview: unified data governance solution
 
-6. Интеграции и сообщения:
-Event Grid: событийно-ориентированная архитектура с CloudEvents support
-Service Bus: очереди сообщений для надежной обработки с transactions
-Service Bus/Event Grid: уведомления и pub/sub паттерн с filtering
+6. Интеграции и обмен сообщениями
+Event Grid: event routing с CloudEvents support
+Service Bus: enterprise messaging с sessions и transactions
+Logic Apps: workflow automation без code
+Azure Relay: hybrid connectivity для on-premises resources
+Notification Hubs: push notifications across platforms
+SignalR Service: real-time web functionality
 
-7. Мониторинг и логирование:
-Azure Monitor: метрики и мониторинг с KQL queries и Application Insights
-Activity Log: аудит API вызовов и resource changes
-Azure Policy/Resource Graph: compliance и конфигурационный аудит
+7. Мониторинг и управление
+Azure Monitor: comprehensive monitoring solution с KQL queries
+Application Insights: APM с dependency mapping
+Log Analytics: centralized log management с retention policies
+Azure Policy: governance с built-in compliance frameworks
+Automation: configuration management и automation
+Azure Resource Manager: infrastructure deployment и management
+Cost Management: budget tracking с recommendations
 
-8. Дополнительные Azure-специфичные сервисы:
-Logic Apps: workflow automation без кода для financial processes
-Azure Cognitive Services: AI/ML сервисы для fraud detection и document processing
-Azure DevOps: end-to-end DevOps platform с boards, repos, pipelines
-Azure Sentinel: cloud-native SIEM для security operations center
+8. Azure-специфичные сервисы для FinTech
+Azure Cognitive Services: AI services для document processing и fraud detection
+Azure Machine Learning: end-to-end ML lifecycle management
+Bot Framework: conversational AI для customer service
+Azure Blockchain: managed blockchain networks
+Azure Digital Twins: IoT solution для smart building/trading floors
+Azure Communication Services: programmable communications
+Form Recognizer: AI-powered document processing
