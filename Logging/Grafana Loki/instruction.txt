@@ -1,0 +1,656 @@
+### Loki Server Configuration
+- устанавливается Loki через Docker Compose или binary distribution
+- создается loki-config.yaml с auth_enabled: false для development
+- настраивается ingester configuration с chunk_idle_period и max_chunk_age
+- конфигурируется table_manager для automated table creation
+- устанавливается storage_config для S3/GCS/Azure backend
+- создается limits_config для preventing resource abuse
+- настраивается ruler configuration для alerting rules
+- включается compactor для storage optimization
+
+### Promtail Log Agent Setup
+- устанавливается Promtail на всех log-generating nodes
+- создается promtail-config.yaml с scrape_configs
+- настраивается file discovery для automatic log file detection
+- конфигурируется pipeline stages для log processing
+- устанавливается relabeling rules для metadata enrichment
+- создается position file для tracking read progress
+- настраивается batch processing для improved performance
+- включается metrics endpoint для monitoring Promtail health
+
+### Grafana Integration
+- устанавливается Grafana с Loki data source configuration
+- создается provisioned data source для automated setup
+- настраивается LogQL query editor для log exploration
+- конфигурируется dashboard templates для FinTech metrics
+- устанавливается alerting integration с Loki queries
+- создается user authentication через LDAP или OAuth
+- настраивается role-based access control (RBAC)
+- включается audit logging для admin operations
+
+## Prometheus интеграция [Metrics & Logs Correlation]
+
+### Prometheus Configuration
+- устанавливается Prometheus с scrape configuration
+- создается prometheus.yml с job definitions для Rust applications
+- настраивается service discovery (Kubernetes, Consul, static)
+- конфигурируется recording rules для pre-computed metrics
+- устанавливается alerting rules для business-critical thresholds
+- создается retention policies для metrics data
+- настраивается remote storage для long-term retention
+- включается exemplars для trace-to-metrics correlation
+
+### Metrics from Rust Applications
+```rust
+use prometheus::{Counter, Histogram, Gauge, register_counter, register_histogram};
+use tracing::{info, instrument};
+
+// Настройка Prometheus metrics
+lazy_static! {
+    static ref TRANSACTION_TOTAL: Counter = register_counter!(
+        "financial_transactions_total",
+        "Total number of financial transactions processed"
+    ).unwrap();
+    
+    static ref TRANSACTION_DURATION: Histogram = register_histogram!(
+        "financial_transaction_duration_seconds",
+        "Transaction processing duration in seconds"
+    ).unwrap();
+    
+    static ref ACCOUNT_BALANCE: Gauge = register_gauge!(
+        "account_balance_total",
+        "Current account balance"
+    ).unwrap();
+}
+
+// Интеграция metrics с structured logging
+#[instrument(fields(transaction_id = %transaction.id))]
+async fn process_payment(transaction: Transaction) -> Result<(), ProcessingError> {
+    let timer = TRANSACTION_DURATION.start_timer();
+    
+    info!(
+        transaction_id = %transaction.id,
+        amount = %transaction.amount,
+        transaction_type = "payment",
+        "Processing payment transaction"
+    );
+    
+    // Business logic here
+    let result = execute_payment(&transaction).await;
+    
+    match result {
+        Ok(_) => {
+            TRANSACTION_TOTAL.inc();
+            info!(
+                transaction_id = %transaction.id,
+                status = "completed",
+                "Payment transaction completed successfully"
+            );
+        }
+        Err(e) => {
+            error!(
+                transaction_id = %transaction.id,
+                error = %e,
+                status = "failed",
+                "Payment transaction failed"
+            );
+        }
+    }
+    
+    timer.observe_duration();
+    result
+}
+```
+
+### Metrics-to-Logs Correlation
+- настраивается exemplars в Prometheus для linking к trace data
+- создается correlation между metrics spikes и log events
+- используется consistent labeling strategy across metrics и logs
+- применяется trace ID propagation для end-to-end correlation
+- настраивается drill-down navigation from metrics to logs
+- используется contextual log queries based на metric filters
+- создается unified alerting combining metrics и log data
+- настраивается automated root cause analysis workflows
+
+## Labels и data modeling [Label Strategy]
+
+### Label Design for FinTech
+- создается consistent labeling strategy для all log streams
+- настраивается environment labels (prod, staging, dev)
+- используется service labels для microservice identification
+- применяется transaction_type labels для business categorization
+- настраивается customer_tier labels для priority handling
+- используется region labels для geographic data organization
+- создается compliance_level labels для regulatory categorization
+- настраивается data_classification labels для security handling
+
+### High-Cardinality Label Management
+- используется structured logging для high-cardinality data in log lines
+- настраивается label value normalization для preventing explosion
+- применяется label value limits для cost control
+- используется stream sharding strategies для performance
+- настраивается automatic label cleanup procedures
+- применяется label value validation at ingestion time
+- создается monitoring для label cardinality trends
+- настраивается alerting для label cardinality violations
+
+### Query Optimization
+- создается efficient LogQL queries для common use cases
+- настраивается query performance monitoring
+- используется line filter optimization для faster queries
+- применяется label filter pushdown for improved performance
+- настраивается query result caching for repeated queries
+- используется query splitting для large time ranges
+- создается query templates для consistent usage patterns
+- настраивается query timeout management
+
+## Безопасность и compliance [Security Configuration]
+
+### Authentication & Authorization
+- настраивается multi-tenancy через tenant isolation
+- создается OAuth/OIDC integration для user authentication
+- используется API key authentication для service accounts
+- применяется RBAC для fine-grained access control
+- настраивается tenant-based data isolation
+- используется audit logging для access monitoring
+- создается service-to-service authentication
+- настраивается encryption at rest для stored logs
+
+### Data Security & Privacy
+- используется log scrubbing для PII data removal
+- настраивается field-level encryption для sensitive data
+- применяется data masking для non-production environments
+- используется secure transport encryption (TLS/mTLS)
+- настраивается geographic data residency controls
+- применяется data retention policies for compliance
+- создается data classification framework
+- настраивается automated compliance validation
+
+### Network Security
+- настраивается network segmentation для Loki components
+- используется firewall rules для access control
+- применяется VPN access для remote administration
+- используется certificate management для TLS termination
+- настраивается load balancer security configurations
+- применяется DDoS protection через rate limiting
+- создается intrusion detection для suspicious activities
+- настраивается security scanning для vulnerabilities
+
+## Storage и performance [Storage Optimization]
+
+### Object Storage Configuration
+- настраивается S3/GCS/Azure backend для chunk storage
+- создается bucket policies для access control
+- используется storage classes для cost optimization
+- применяется lifecycle policies для automated data management
+- настраивается cross-region replication для disaster recovery
+- используется encryption configuration для data protection
+- создается backup strategies для storage resilience
+- настраивается monitoring для storage health
+
+### Chunk Management
+- настраивается chunk size optimization для query performance
+- создается chunk compression configuration
+- используется chunk caching strategies for improved performance
+- применяется chunk retention policies
+- настраивается chunk compaction procedures
+- используется chunk deduplication for storage efficiency
+- создается chunk integrity validation
+- настраивается chunk migration procedures
+
+### Query Performance Tuning
+- настраивается query frontend для query optimization
+- создается query result caching configuration
+- используется query splitting для large time ranges
+- применяется parallel query execution
+- настраивается index optimization strategies
+- используется bloom filter configuration для faster queries
+- создается query performance monitoring
+- настраивается query resource limits
+
+## Alerting и monitoring [Observability]
+
+### LogQL Alert Rules
+```yaml
+# Prometheus alerting rules для Loki
+groups:
+  - name: financial_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          (
+            rate({service="payment-processor"} |= "ERROR" [5m]) /
+            rate({service="payment-processor"}[5m])
+          ) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          team: fintech
+        annotations:
+          summary: "High error rate in payment processor"
+          description: "Error rate is {{ $value }} for payment processor"
+
+      - alert: SuspiciousTransactionPattern
+        expr: |
+          sum(rate({service="fraud-detection"} |= "SUSPICIOUS" [1m])) > 10
+        for: 30s
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: "Unusual pattern of suspicious transactions detected"
+          description: "{{ $value }} suspicious transactions per minute"
+
+      - alert: ComplianceViolation
+        expr: |
+          count_over_time({service=~".*"} |~ "COMPLIANCE_VIOLATION" [1h]) > 0
+        for: 0s
+        labels:
+          severity: critical
+          team: compliance
+        annotations:
+          summary: "Compliance violation detected"
+          description: "Compliance violation found in logs"
+```
+
+### Grafana Dashboard Design
+- создается executive dashboard для business metrics
+- настраивается operational dashboard для infrastructure health
+- используется security dashboard для threat monitoring
+- применяется compliance dashboard для regulatory oversight
+- настраивается real-time dashboard для trading operations
+- используется customer service dashboard для support operations
+- создается capacity planning dashboard для resource management
+- настраивается cost optimization dashboard для financial oversight
+
+### Alert Management
+- настраивается alert routing based на severity и team
+- создается escalation policies для critical alerts
+- используется alert suppression для maintenance windows
+- применяется alert grouping для reducing noise
+- настраивается alert enrichment с contextual information
+- используется webhook integration для external systems
+- создается alert analytics для pattern recognition
+- настраивается on-call rotation management
+
+## Real-time log processing [Stream Processing]
+
+### LogQL for Real-time Analytics
+```yaml
+# Real-time transaction monitoring queries
+- expr: |
+    sum(rate({service="payment-gateway"} 
+      | json 
+      | amount > 10000 [1m])) by (currency)
+  description: "High-value transactions per minute by currency"
+
+- expr: |
+    count_over_time({service="fraud-detection"} 
+      |= "risk_score" 
+      | json 
+      | risk_score > 0.8 [5m])
+  description: "High-risk transactions in last 5 minutes"
+
+- expr: |
+    sum by (country) (
+      rate({service="kyc-service"} 
+        |= "verification_failed" [10m])
+    )
+  description: "KYC verification failures by country"
+```
+
+### Stream Processing Patterns
+- создается event-driven alerting based на log patterns
+- настраивается real-time aggregation для business metrics
+- используется correlation analysis между different log streams
+- применяется anomaly detection через statistical analysis
+- настраивается trend analysis для capacity planning
+- используется pattern recognition для fraud detection
+- создается automated response triggers based на log events
+- настраивается machine learning integration для predictive analytics
+
+### Integration with External Systems
+- настраивается webhook alerts для incident management systems
+- создается API integration для automated ticket creation
+- используется message queue integration для async processing
+- применяется database integration для audit trail storage
+- настраивается email/SMS notifications для critical alerts
+- используется Slack/Teams integration для team collaboration
+- создается SIEM integration для security operations
+- настраивается compliance reporting automation
+
+## High availability и scaling [Scalability]
+
+### Loki Cluster Architecture
+- создается distributed Loki deployment с multiple components
+- настраивается ingester replication для data redundancy
+- используется query frontend scaling для improved performance
+- применяется distributor load balancing
+- настраивается ruler high availability configuration
+- используется table manager coordination
+- создается cross-zone deployment for resilience
+- настраивается automated failover procedures
+
+### Horizontal Scaling Strategies
+- настраивается auto-scaling based на ingestion rate
+- создается shard distribution strategies
+- используется consistent hashing для data distribution
+- применяется tenant sharding for multi-tenancy
+- настраивается query parallelization
+- используется cache scaling strategies
+- создается storage scaling procedures
+- настраивается capacity planning automation
+
+### Performance Optimization
+- настраивается ingestion rate optimization
+- создается query performance tuning
+- используется caching strategies at multiple levels
+- применяется compression optimization
+- настраивается batch processing for efficiency
+- используется connection pooling optimization
+- создается resource allocation tuning
+- настраивается monitoring для performance bottlenecks
+
+## Backup и disaster recovery [Data Protection]
+
+### Backup Strategies
+- создается automated backup procedures для configuration data
+- настраивается chunk backup через object storage replication
+- используется metadata backup for cluster state
+- применяется incremental backup strategies
+- настраивается cross-region backup replication
+- используется backup validation procedures
+- создается backup retention management
+- настраивается emergency backup procedures
+
+### Disaster Recovery Planning
+- создается comprehensive DR plan для Loki infrastructure
+- настраивается RTO/RPO targets для different data types
+- используется automated failover procedures
+- применяется data replication strategies
+- настраивается recovery validation procedures
+- используется regular DR testing
+- создается business continuity planning
+- настраивается communication procedures during incidents
+
+### Business Continuity
+- создается alternative access methods during outages
+- настраивается degraded functionality procedures
+- используется cached data strategies
+- применяется emergency access procedures
+- настраивается stakeholder communication
+- используется incident response coordination
+- создается lessons learned processes
+- настраивается preventive measures implementation
+
+## Production operations [Operations]
+
+### Deployment Automation
+- создается infrastructure as code через Terraform/Helm
+- настраивается CI/CD pipeline для Loki deployments
+- используется blue-green deployment strategies
+- применяется automated testing procedures
+- настраивается rollback capabilities
+- используется configuration management
+- создается deployment validation
+- настраивается health checking automation
+
+### Operational Procedures
+- создается runbook для common operational tasks
+- настраивается scheduled maintenance procedures
+- используется proactive monitoring для issue prevention
+- применяется automated maintenance tasks
+- настраивается emergency procedures
+- используется change management processes
+- создается incident response procedures
+- настраивается post-incident analysis
+
+### Cost Management
+- настраивается cost monitoring для storage и compute
+- создается cost allocation tracking
+- используется resource optimization strategies
+- применяется automated cost controls
+- настраивается budget alerting
+- используется rightsizing recommendations
+- создается cost reporting procedures
+- настраивается vendor management для cost optimization
+
+## Integration с Rust ecosystem [Rust-Specific Patterns]
+
+### Structured Logging Implementation
+```rust
+use serde::{Deserialize, Serialize};
+use tracing::{info, error, warn, instrument};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+#[derive(Serialize, Deserialize)]
+struct TransactionLog {
+    transaction_id: String,
+    amount: f64,
+    currency: String,
+    account_id: String,
+    transaction_type: String,
+    status: String,
+    processing_time_ms: u64,
+    risk_score: Option<f32>,
+    compliance_flags: Vec<String>,
+}
+
+// Настройка tracing для Loki-compatible output
+fn init_logging() {
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "info".into()),
+        )
+        .with(tracing_subscriber::fmt::layer().json())
+        .init();
+}
+
+// Structured logging для финансовых операций
+#[instrument(
+    fields(
+        transaction_id = %transaction.id,
+        account_id = %transaction.account_id,
+        amount = %transaction.amount
+    )
+)]
+async fn process_transaction(transaction: &Transaction) -> Result<(), TransactionError> {
+    let start = std::time::Instant::now();
+    
+    info!(
+        event = "transaction_started",
+        transaction_type = %transaction.transaction_type,
+        currency = %transaction.currency,
+        "Starting transaction processing"
+    );
+    
+    // Risk assessment
+    let risk_score = assess_transaction_risk(transaction).await?;
+    
+    if risk_score > 0.8 {
+        warn!(
+            event = "high_risk_transaction",
+            risk_score = risk_score,
+            "High-risk transaction detected"
+        );
+    }
+    
+    // Process transaction
+    match execute_transaction(transaction).await {
+        Ok(result) => {
+            let processing_time = start.elapsed().as_millis() as u64;
+            
+            info!(
+                event = "transaction_completed",
+                status = "success",
+                processing_time_ms = processing_time,
+                result_id = %result.id,
+                "Transaction processed successfully"
+            );
+            
+            Ok(())
+        }
+        Err(e) => {
+            error!(
+                event = "transaction_failed",
+                error = %e,
+                error_type = ?e,
+                "Transaction processing failed"
+            );
+            Err(e)
+        }
+    }
+}
+```
+
+### Promtail Configuration for Rust Logs
+```yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: rust-fintech-app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: rust-fintech
+          environment: production
+          __path__: /var/log/fintech/*.log
+    
+    pipeline_stages:
+      # Parse JSON logs
+      - json:
+          expressions:
+            level: level
+            timestamp: timestamp
+            message: message
+            span: span
+            transaction_id: fields.transaction_id
+            account_id: fields.account_id
+            amount: fields.amount
+            event: event
+      
+      # Extract additional labels
+      - labels:
+          level:
+          event:
+          
+      # Add timestamp
+      - timestamp:
+          source: timestamp
+          format: RFC3339Nano
+          
+      # Template for output formatting
+      - template:
+          source: output
+          template: '{{ .message }}'
+          
+      # Output the formatted log
+      - output:
+          source: output
+```
+
+### Custom Metrics Integration
+```rust
+use prometheus::{Encoder, TextEncoder, Counter, Histogram, Gauge};
+use axum::{response::Html, routing::get, Router};
+use std::sync::Arc;
+
+#[derive(Clone)]
+struct Metrics {
+    transaction_counter: Counter,
+    processing_time: Histogram,
+    active_connections: Gauge,
+}
+
+impl Metrics {
+    fn new() -> Self {
+        let transaction_counter = Counter::new(
+            "fintech_transactions_total",
+            "Total number of transactions processed"
+        ).unwrap();
+        
+        let processing_time = Histogram::new(
+            "fintech_transaction_duration_seconds",
+            "Transaction processing time in seconds"
+        ).unwrap();
+        
+        let active_connections = Gauge::new(
+            "fintech_active_connections",
+            "Number of active client connections"
+        ).unwrap();
+        
+        // Register metrics
+        prometheus::register(Box::new(transaction_counter.clone())).unwrap();
+        prometheus::register(Box::new(processing_time.clone())).unwrap();
+        prometheus::register(Box::new(active_connections.clone())).unwrap();
+        
+        Self {
+            transaction_counter,
+            processing_time,
+            active_connections,
+        }
+    }
+}
+
+// Metrics endpoint for Prometheus scraping
+async fn metrics_handler() -> Html<String> {
+    let encoder = TextEncoder::new();
+    let metric_families = prometheus::gather();
+    let mut buffer = vec![];
+    encoder.encode(&metric_families, &mut buffer).unwrap();
+    Html(String::from_utf8(buffer).unwrap())
+}
+
+// Integration в main application
+async fn setup_metrics_server() {
+    let app = Router::new()
+        .route("/metrics", get(metrics_handler));
+        
+    axum::Server::bind(&"0.0.0.0:9090".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+}
+```
+
+## Compliance и audit [Regulatory Requirements]
+
+### Immutable Audit Logging
+- создается write-only log streams для audit data
+- настраивается tamper-evident logging mechanisms
+- используется digital signatures для log integrity
+- применяется blockchain-based audit trails for critical events
+- настраивается automated compliance validation
+- используется regulatory reporting automation
+- создается evidence collection procedures
+- настраивается compliance dashboard для real-time monitoring
+
+### Data Retention & Governance
+- создается automated data retention policies
+- настраивается compliance-driven data classification
+- используется automated data purging for GDPR compliance
+- применяется data lineage tracking for transparency
+- настраивается access audit trails
+- используется privacy protection mechanisms
+- создается data breach response procedures
+- настраивается regular compliance assessments
+
+### Regulatory Reporting
+- создается automated regulatory report generation
+- настраивается data extraction для compliance requirements
+- используется template-based reporting for consistency
+- применяется validation procedures для report accuracy
+- настраивается automated report delivery
+- используется audit trail для report generation
+- создается exception reporting for compliance violations
+- настраивается stakeholder notification procedures
