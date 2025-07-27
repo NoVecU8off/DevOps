@@ -1,9 +1,5 @@
 Prometheus
 Grafana
 
-PostgreSQL
-Redis
-ClickHouse
-
 Terraform
 Helm
