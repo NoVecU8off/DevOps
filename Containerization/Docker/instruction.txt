@@ -1,0 +1,102 @@
+Создание оптимизированного Docker образа для Rust приложения [Multi-stage Build]:
+- создается Dockerfile в корне проекта с multi-stage подходом
+- используется официальный rust:1.75-slim образ для build stage
+- создается отдельный runtime stage с debian:bookworm-slim для минимального размера
+- в build stage устанавливается только необходимые системные зависимости
+- копируется Cargo.toml и Cargo.lock для кэширования dependencies
+- выполняется cargo build --release для production сборки
+- в runtime stage копируется только скомпилированный binary
+- устанавливается ca-certificates для HTTPS соединений
+- создается non-root пользователь для безопасности
+- используется COPY --from=builder для копирования артефактов между stages
+
+Настройка безопасности контейнера [Security Best Practices]:
+- в Dockerfile используется USER directive для запуска от non-root пользователя
+- применяется принцип least privilege для file permissions
+- используется --read-only флаг при запуске контейнера
+- монтируется tmpfs для временных файлов через --tmpfs /tmp
+- ограничиваются capabilities через --cap-drop ALL --cap-add NEEDED_CAP
+- настраивается memory и CPU limits через --memory и --cpus
+- используется docker scan для проверки уязвимостей в образе
+- применяется .dockerignore для исключения sensitive файлов
+- в production используются signed images и content trust
+
+Управление конфигурацией и секретами [Environment & Secrets]:
+- создается .env файл для development окружения
+- используются environment variables вместо hardcoded значений
+- применяются Docker secrets для sensitive данных в Swarm mode
+- настраивается external secrets через volume mounts
+- используется docker-compose.override.yml для local development
+- создаются health checks через HEALTHCHECK directive в Dockerfile
+- настраивается logging driver для centralized logging
+- применяются labels для metadata и monitoring integration
+
+Оптимизация сборки и кэширования [Build Optimization]:
+- используется BuildKit для улучшенной производительности сборки
+- создается .dockerignore с исключением target/, node_modules/, .git/
+- применяется layer caching для dependencies installation
+- используется cargo chef для кэширования Rust dependencies
+- настраивается multi-platform builds для ARM64 и AMD64
+- применяется docker buildx для advanced build features
+- используется registry cache для ускорения CI/CD builds
+- настраивается build arguments для conditional compilation
+
+Настройка мониторинга и логирования [Observability]:
+- в Dockerfile добавляется EXPOSE directive для port documentation
+- настраивается structured logging в JSON формате
+- используется fluentd или logstash driver для log forwarding
+- добавляются health check endpoints в Rust приложение
+- настраивается metrics exposure через Prometheus format
+- используются labels для service discovery и monitoring
+- применяется tracing для distributed systems debugging
+- настраивается log rotation и retention policies
+
+Работа с базами данных в контейнерах [Database Integration]:
+- используется официальный postgres:15-alpine образ
+- создается init script для database schema initialization
+- настраивается persistent volume для database data
+- используются environment variables для database credentials
+- применяется backup strategy через pg_dump в отдельном контейнере
+- настраивается connection pooling в приложении
+- используется database migration tool (diesel или sqlx)
+- настраивается database health checks и readiness probes
+
+Создание development окружения [Local Development]:
+- создается docker-compose.dev.yml для local development
+- используется volume mounts для hot reloading
+- настраивается debugger support через exposed ports
+- применяется override файлы для developer-specific настроек
+- используется network aliases для service communication
+- настраивается database seeding для test data
+- добавляется redis container для caching layer
+- используется mailhog или similar для email testing
+
+Подготовка к production deployment [Production Readiness]:
+- создается минимальный production Dockerfile без dev dependencies
+- настраивается proper signal handling в Rust приложении
+- используется distroless или scratch базовый образ для security
+- применяется image scanning в CI/CD pipeline
+- настраивается proper restart policies
+- используется read-only filesystem где возможно
+- применяется resource limits для memory и CPU
+- настраивается graceful shutdown handling
+
+Интеграция с CI/CD [Continuous Integration]:
+- создается .github/workflows/docker.yml для GitHub Actions
+- настраивается multi-stage pipeline: test, build, push, deploy
+- используется docker layer caching в CI/CD
+- применяется semantic versioning для image tags
+- настраивается automatic vulnerability scanning
+- используется registry credentials через secrets
+- применяется parallel builds для multiple platforms
+- настраивается automatic cleanup старых образов
+
+Локальная разработка с hot reloading [Development Workflow]:
+- используется cargo-watch для automatic rebuilds
+- настраивается volume mount для source code
+- применяется development override для faster builds
+- используется local registry для быстрого deployment
+- настраивается database migrations в development
+- применяется test containers для integration tests
+- используется docker-compose exec для debugging
+- настраивается IDE integration для remote development

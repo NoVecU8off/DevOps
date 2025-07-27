@@ -1,0 +1,129 @@
+Создание базовой многосервисной архитектуры [Multi-service Setup]:
+- создается docker-compose.yml в корне проекта с version: '3.8'
+- определяется service для Rust API приложения с build context
+- добавляется service для PostgreSQL database с official образом
+- создается service для Redis cache с persistence volume
+- настраивается reverse proxy через nginx service
+- определяется shared network для inter-service communication
+- добавляются named volumes для persistent data storage
+- настраиваются environment variables через .env файл
+
+Настройка сетевой изоляции и безопасности [Network Security]:
+- создается custom bridge network для изоляции сервисов
+- настраиваются internal networks для database tier
+- используется external network для публичного доступа
+- применяются network aliases для service discovery
+- настраиваются port mappings только для необходимых сервисов
+- используется secrets для sensitive configuration
+- применяется least privilege principle для network access
+- настраиваются firewall rules через iptables integration
+
+Управление конфигурацией и окружениями [Configuration Management]:
+- создается .env файл для default environment variables
+- используется docker-compose.override.yml для local development
+- создается docker-compose.prod.yml для production overrides
+- применяется docker-compose.test.yml для testing environment
+- настраиваются config files через volume mounts
+- используются external configs для shared configuration
+- применяется template substitution для dynamic values
+- настраивается environment-specific service scaling
+
+Настройка баз данных и миграций [Database Management]:
+- в postgres service настраивается POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
+- создается init-db directory с SQL initialization scripts
+- используется named volume для postgres data persistence
+- настраивается database backup service с cron schedule
+- добавляется pgadmin service для database administration
+- используется connection pooling через pgbouncer service
+- настраиваются database health checks и readiness probes
+- применяется automated migration через init containers
+
+Настройка мониторинга и логирования [Observability Stack]:
+- добавляется prometheus service для metrics collection
+- создается grafana service с pre-configured dashboards
+- настраивается alertmanager для alerting rules
+- добавляется elasticsearch service для log aggregation
+- создается kibana service для log visualization
+- используется fluentd service для log forwarding
+- настраивается jaeger service для distributed tracing
+- применяются health checks для all critical services
+
+Конфигурация кэширования и очередей [Caching & Messaging]:
+- настраивается redis service с persistence и replication
+- добавляется redis-commander для redis administration
+- создается rabbitmq service с management UI
+- настраивается kafka service с zookeeper для event streaming
+- используется memcached service для simple caching
+- применяется connection pooling для all cache connections
+- настраиваются backup strategies для message queues
+- добавляются monitoring metrics для cache hit rates
+
+Разработка и отладка [Development Environment]:
+- создается development override с volume mounts для hot reloading
+- настраивается debugger ports для remote debugging
+- используется file watcher для automatic service restarts
+- добавляется testing database service для integration tests
+- создается mock services для external API dependencies
+- настраивается development SMTP server через mailhog
+- применяются development certificates для HTTPS testing
+- используется IDE integration для remote development
+
+Production-ready конфигурация [Production Deployment]:
+- настраиваются restart policies для all services
+- применяются resource limits (memory, CPU) для each service
+- используются health checks с proper timeouts
+- настраивается log rotation и retention policies
+- применяются security contexts и user namespaces
+- используются secrets management вместо environment variables
+- настраиваются backup strategies для stateful services
+- применяется blue-green deployment через service aliases
+
+Автоматизация и CI/CD интеграция [Automation]:
+- создается Makefile с common docker-compose commands
+- настраиваются automated tests через docker-compose run
+- используется docker-compose.ci.yml для CI/CD pipeline
+- применяются dependency health checks для service ordering
+- настраиваются automated backups через cron containers
+- используется service scaling через docker-compose scale
+- применяются rolling updates для zero-downtime deployments
+- настраиваются cleanup jobs для old containers и volumes
+
+Масштабирование и производительность [Scaling & Performance]:
+- настраивается horizontal scaling через replicas
+- используется load balancing через nginx upstream
+- применяются connection pooling для database connections
+- настраиваются cache layers для improved performance
+- используется CDN integration для static assets
+- применяются compression и optimization в nginx
+- настраиваются auto-scaling triggers через external tools
+- используются performance monitoring и profiling tools
+
+Управление зависимостями и обновлениями [Dependency Management]:
+- используется dependabot для automated dependency updates
+- настраиваются image scanning для vulnerability detection
+- применяются semantic versioning для service images
+- используется staging environment для testing updates
+- настраиваются rollback procedures для failed deployments
+- применяются blue-green deployments для critical services
+- используется canary deployments для gradual rollouts
+- настраиваются automated testing для all updates
+
+Резервное копирование и восстановление [Backup & Recovery]:
+- создается backup service с automated PostgreSQL dumps
+- настраивается volume backup через external storage
+- используется point-in-time recovery для databases
+- применяются encrypted backups для sensitive data
+- настраиваются disaster recovery procedures
+- используется multi-region backup replication
+- применяются automated backup testing и validation
+- настраиваются monitoring для backup success/failure
+
+Безопасность и соответствие требованиям [Security & Compliance]:
+- используются non-root users для all containers
+- применяются read-only filesystems где возможно
+- настраиваются security scanning для all images
+- используются encrypted volumes для sensitive data
+- применяются network policies для traffic control
+- настраиваются audit logging для compliance
+- используются signed images и content trust
+- применяются regular security updates и patching
