@@ -1,0 +1,48 @@
+1. Вычисления и контейнеризация:
+Virtual Machines: виртуальные серверы для запуска Rust-приложений
+Container Instances/AKS: оркестрация контейнеров для микросервисной архитектуры
+Azure Functions: serverless функции для обработки транзакций и событий
+Container Instances: serverless контейнеры без управления кластером
+Container Registry: registry для хранения Docker образов с vulnerability scanning
+
+2. Базы данных:
+Azure Database for PostgreSQL: реляционные БД для финансовых данных и ACID транзакций
+Cosmos DB: NoSQL для высокочастотной торговли и real-time данных с global distribution
+Cosmos DB (MongoDB API): для хранения сложных финансовых документов и JSON структур
+Azure Cache for Redis: кэширование для низкой латентности с persistence options
+
+3. Безопасность:
+Azure Active Directory + RBAC: управление доступами с enterprise интеграцией
+Key Vault: управление ключами шифрования, сертификатами и секретами
+Microsoft Defender for Cloud: обнаружение угроз и vulnerability assessment
+Key Vault: безопасное хранение API ключей и токенов с HSM support
+Web Application Firewall: защита веб-приложений от атак с managed rule sets
+
+4. Сеть и API:
+API Management: управление API с developer portal и monetization
+Azure CDN: CDN для глобального доступа с Microsoft edge locations
+Virtual Network: изолированные сетевые среды с service endpoints
+Application Gateway/Load Balancer: распределение нагрузки с SSL termination
+Virtual Machine Scale Sets/Autoscale: автоматическое масштабирование
+
+5. Данные и аналитика:
+Event Hubs/Stream Analytics: потоковая обработка данных в real-time
+Azure Synapse Analytics: хранилище данных для аналитики с Apache Spark
+Data Factory: ETL для обработки больших объемов данных с 90+ connectors
+Power BI: бизнес-аналитика с native Office 365 интеграцией
+
+6. Интеграции и сообщения:
+Event Grid: событийно-ориентированная архитектура с CloudEvents support
+Service Bus: очереди сообщений для надежной обработки с transactions
+Service Bus/Event Grid: уведомления и pub/sub паттерн с filtering
+
+7. Мониторинг и логирование:
+Azure Monitor: метрики и мониторинг с KQL queries и Application Insights
+Activity Log: аудит API вызовов и resource changes
+Azure Policy/Resource Graph: compliance и конфигурационный аудит
+
+8. Дополнительные Azure-специфичные сервисы:
+Logic Apps: workflow automation без кода для financial processes
+Azure Cognitive Services: AI/ML сервисы для fraud detection и document processing
+Azure DevOps: end-to-end DevOps platform с boards, repos, pipelines
+Azure Sentinel: cloud-native SIEM для security operations center

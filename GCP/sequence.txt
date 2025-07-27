@@ -1,0 +1,160 @@
+Управление состоянием Terraform инфраструктуры [Cloud Storage + Cloud Storage]:
+- через gcloud CLI или консоль создается Cloud Storage bucket для terraform state
+- в консоли Cloud Storage включается versioning для bucket
+- создается файл backend.tf с конфигурацией gcs backend
+- выполняется terraform init для инициализации remote backend
+- terraform state автоматически сохраняется в Cloud Storage при terraform apply
+
+Настройка сетевой инфраструктуры с публичными и приватными подсетями [VPC]:
+- создается terraform файл vpc.tf с ресурсами google_compute_network
+- в GCP консоли VPC определяются CIDR блоки для планирования
+- в terraform создается google_compute_network с custom subnet mode
+- в terraform создаются google_compute_subnetwork для разных регионов
+- в terraform добавляется google_compute_router для Cloud NAT
+- в terraform создается google_compute_router_nat для исходящего трафика
+- в terraform настраиваются google_compute_firewall_rule для контроля трафика
+- включается google_compute_network_peering при необходимости
+- выполняется terraform plan и terraform apply для создания инфраструктуры
+
+Создание ролей и политик доступа для сервисов [IAM]:
+- создается terraform файл iam.tf с ресурсами google_service_account
+- в GCP консоли IAM изучаются предустановленные роли
+- в terraform создаются google_service_account для разных сервисов
+- в terraform настраиваются google_project_iam_binding для назначения ролей
+- в terraform создаются google_service_account_key для аутентификации
+- выполняется terraform apply для создания сервисных аккаунтов
+
+Настройка шифрования данных и управление ключами [Cloud KMS]:
+- в terraform создается google_kms_key_ring в нужном регионе
+- в terraform создается google_kms_crypto_key с назначением
+- в terraform настраивается rotation через rotation_period
+- в terraform ресурсах Cloud SQL, Cloud Storage указывается kms_key_name
+- в terraform создаются google_kms_crypto_key_iam_binding для доступа
+
+Хранение секретов и паролей баз данных [Secret Manager]:
+- в terraform создается google_secret_manager_secret для database credentials
+- через gcloud CLI добавляются значения секретов с версионированием
+- в terraform создаются google_secret_manager_secret_iam_binding для доступа
+- в приложении используется Google Cloud SDK для получения секретов
+- настраивается автоматическая ротация через Cloud Functions
+
+Настройка приватного реестра для Docker образов [Artifact Registry]:
+- в terraform создается google_artifact_registry_repository с format DOCKER
+- в terraform настраиваются google_artifact_registry_repository_iam_binding
+- через gcloud CLI выполняется gcloud auth configure-docker для аутентификации
+- в CI/CD скриптах используется docker push для загрузки образов
+- настраивается google_artifact_registry_repository_cleanup_policy
+
+Хранение статических файлов и бэкапов [Cloud Storage]:
+- в terraform создается google_storage_bucket с globally unique именем
+- в terraform включается versioning через google_storage_bucket_versioning
+- в terraform настраивается google_storage_bucket_lifecycle_condition
+- в terraform добавляется google_storage_bucket_logging для access logs
+- в terraform создается google_storage_bucket_iam_binding для ограничения доступа
+- через gsutil или консоль загружаются файлы
+
+Создание CI/CD pipeline для автоматического деплоя [Cloud Build]:
+- создается файл cloudbuild.yaml в корне репозитория с инструкциями сборки Rust
+- в GCP консоли Cloud Build создается trigger для GitHub/Cloud Source Repositories
+- в cloudbuild.yaml настраиваются steps для build, test, deploy
+- в terraform создается google_cloudbuild_trigger для автоматизации
+- в Cloud Build настраивается substitution variables для разных окружений
+- настраивается интеграция с Artifact Registry для хранения образов
+
+Настройка платформы для запуска контейнеров [Cloud Run]:
+- в terraform создается google_cloud_run_service с container image
+- в terraform настраивается traffic allocation между revisions
+- в terraform добавляется google_cloud_run_service_iam_binding для доступа
+- настраивается автоматическое масштабирование через annotations
+- в terraform создается google_cloud_run_domain_mapping для custom domain
+
+Альтернативная платформа для сложных приложений [GKE]:
+- в terraform создается google_container_cluster с node pools
+- в terraform настраивается google_container_node_pool с preemptible instances
+- создается kubectl deployment manifests для Rust приложений
+- настраивается google_compute_ssl_policy для HTTPS
+- в terraform добавляется workload identity для безопасного доступа к GCP сервисам
+
+Создание serverless функций для обработки событий [Cloud Functions]:
+- создается код функции в отдельной папке проекта
+- используется functions-framework для локальной разработки
+- в terraform создается google_cloudfunctions_function с source archive
+- в terraform настраиваются environment variables и event triggers
+- в terraform создаются google_cloudfunctions_function_iam_binding для доступа
+- настраивается интеграция с Pub/Sub для событийной архитектуры
+
+Настройка API управления для REST/GraphQL API [API Gateway + Cloud Endpoints]:
+- создается OpenAPI specification файл для API
+- в terraform создается google_api_gateway_api с spec
+- в terraform создается google_api_gateway_api_config
+- в terraform создается google_api_gateway_gateway для deployment
+- настраивается аутентификация через google_service_account
+- включается logging через Cloud Logging для request/response
+
+Настройка балансировщика нагрузки с SSL сертификатами [Cloud Load Balancing + SSL]:
+- в terraform создается google_compute_managed_ssl_certificate для домена
+- через DNS провайдера настраивается A запись на IP балансировщика
+- в terraform создается google_compute_global_address для статического IP
+- в terraform создается google_compute_backend_service для Cloud Run
+- в terraform настраивается google_compute_url_map для routing
+- в terraform создается google_compute_target_https_proxy с SSL сертификатом
+- в terraform создается google_compute_global_forwarding_rule
+
+Создание основной базы данных с автоматическими бэкапами [Cloud SQL PostgreSQL]:
+- в terraform создается google_sql_database_instance с database_version POSTGRES
+- в terraform настраивается settings с tier и disk_size
+- в terraform создается google_sql_database для приложения
+- в terraform создается google_sql_user с password из Secret Manager
+- в terraform включается backup_configuration с enabled = true
+- в terraform настраивается maintenance_window для обновлений
+- включается deletion_protection = true для production
+
+Настройка кэша для улучшения производительности [Memorystore Redis]:
+- в terraform создается google_redis_instance в приватной сети
+- в terraform настраивается memory_size_gb и redis_version
+- в terraform включается auth_enabled и transit_encryption_mode
+- в terraform настраивается maintenance_policy для обновлений
+- в приложении используется Redis client library для подключения
+
+Настройка правил безопасности для контроля трафика [VPC Firewall]:
+- в terraform создается google_compute_firewall для HTTP/HTTPS от 0.0.0.0/0
+- в terraform создается google_compute_firewall для внутреннего трафика между сервисами
+- в terraform создаются правила для доступа к Cloud SQL из Cloud Run
+- в terraform настраиваются target_tags для применения правил к конкретным ресурсам
+- используется принцип least privilege для всех правил
+
+Защита от базовых веб-атак [Cloud Armor]:
+- в terraform создается google_compute_security_policy с adaptive protection
+- в terraform добавляются rules для защиты от DDoS и OWASP Top 10
+- в terraform создаются rate limiting rules по IP адресам
+- в terraform настраивается geographic restriction если нужно
+- в terraform привязывается policy к backend service через security_policy
+
+Настройка аудита и соответствия требованиям [Cloud Audit Logs + Security Command Center]:
+- в terraform включается google_project_audit_logs для всех сервисов
+- автоматически включаются Admin Activity и System Event logs
+- в terraform настраивается google_logging_project_sink для экспорта в BigQuery
+- включается Security Command Center для мониторинга угроз
+- настраиваются notifications через Pub/Sub для критических событий
+
+Настройка базового логирования приложений [Cloud Logging]:
+- логи от Cloud Run автоматически попадают в Cloud Logging
+- в terraform создаются google_logging_metric для custom metrics
+- в приложении используется structured logging library (slog для Rust)
+- в terraform настраиваются google_logging_project_sink для long-term storage
+- настраивается retention через log bucket configuration
+
+Создание алертов для критических метрик [Cloud Monitoring + Alerting]:
+- в terraform создается google_monitoring_notification_channel для уведомлений
+- в terraform создаются google_monitoring_alert_policy для CPU, memory, latency
+- создаются custom metrics для business KPI через Cloud Monitoring API
+- в terraform настраивается google_monitoring_dashboard для операционной команды
+- в приложении используется Cloud Monitoring SDK для отправки metrics
+
+Создание событийной архитектуры для микросервисов [Pub/Sub]:
+- в terraform создается google_pubsub_topic для событий
+- в terraform создаются google_pubsub_subscription для consumers
+- в terraform настраивается google_pubsub_topic_iam_binding для доступа
+- в terraform создается google_pubsub_subscription с dead_letter_policy
+- в приложении используется Pub/Sub SDK для отправки и получения сообщений
+- настраивается push subscription для интеграции с Cloud Functions

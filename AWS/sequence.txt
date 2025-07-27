@@ -1,0 +1,183 @@
+Управление состоянием Terraform инфраструктуры [S3 + DynamoDB]:
+- вручную через AWS консоли S3 создается bucket для terraform state
+- в консоли S3 включается versioning для bucket
+- в консоли S3 включается server-side encryption для bucket
+- вручную через AWS консоли DynamoDB создается таблица с partition key LockID
+- создается файл backend.tf с конфигурацией s3 backend
+- выполняется terraform init для инициализации remote backend
+- terraform state автоматически сохраняется в S3 при terraform apply
+
+Настройка сетевой инфраструктуры с публичными и приватными подсетями [VPC]:
+- создается terraform файл vpc.tf с ресурсами aws_vpc, aws_subnet
+- в AWS консоли VPC Dashboard определяются CIDR блоки для планирования
+- в terraform файле описываются публичные подсети для ALB и NAT Gateway
+- в terraform файле описываются приватные подсети для приложений и баз данных
+- в terraform добавляется aws_internet_gateway для публичного доступа
+- в terraform создаются aws_nat_gateway в каждой AZ для исходящего трафика
+- в terraform настраиваются aws_route_table для каждого типа подсетей
+- в terraform добавляется aws_vpc_endpoint для S3 и других AWS сервисов (снижение costs)
+- настраиваются aws_network_acl для дополнительного уровня безопасности
+- включается aws_flow_log для VPC для аудита сетевого трафика
+- выполняется terraform plan и terraform apply для создания инфраструктуры
+
+Создание ролей и политик доступа для сервисов [IAM]:
+- создается terraform файл iam.tf с ресурсами aws_iam_role
+- в AWS консоли IAM изучаются существующие service-linked роли
+- в terraform файле определяются политики доступа через aws_iam_policy_document
+- в terraform создаются роли для ECS tasks, Lambda execution, RDS enhanced monitoring
+- в terraform создается роль для AWS Backup service
+- в terraform настраиваются aws_iam_role_policy_attachment для связывания ролей и политик
+- выполняется terraform apply для создания ролей в AWS
+
+Настройка шифрования данных и управление ключами [KMS]:
+- в terraform создается aws_kms_key с описанием назначения
+- в terraform создается aws_kms_alias для удобного обращения к ключу
+- в terraform настраивается policy через aws_kms_key_policy
+- в terraform ресурсах RDS, S3, EBS указывается kms_key_id
+- в terraform включается enable_key_rotation для автоматической ротации
+
+Хранение секретов и паролей баз данных [Secrets Manager]:
+- в terraform создается aws_secretsmanager_secret для database credentials
+- через AWS CLI или консоль Secrets Manager добавляются значения секретов
+- в terraform настраивается aws_secretsmanager_secret_rotation для RDS паролей
+- в terraform создаются aws_iam_policy для доступа ECS и Lambda к секретам
+- в приложении используется AWS SDK для получения секретов во время выполнения
+
+Настройка приватного реестра для Docker образов [ECR]:
+- в terraform создается aws_ecr_repository с именем проекта
+- в terraform добавляется aws_ecr_lifecycle_policy для очистки старых образов
+- в terraform настраивается aws_ecr_repository_policy для ограничения доступа к образам
+- в terraform включается image_scanning_configuration с scan_on_push = true
+- через AWS консоли ECR или terraform настраиваются права доступа
+- через AWS CLI выполняется aws ecr get-login-password для аутентификации docker
+- в CI/CD скриптах используется docker push для загрузки образов
+
+Хранение статических файлов и бэкапов [S3]:
+- в terraform создается aws_s3_bucket с globally unique именем
+- в terraform добавляется aws_s3_bucket_versioning для включения versioning
+- в terraform создается aws_s3_bucket_server_side_encryption_configuration
+- в terraform включается aws_s3_bucket_public_access_block
+- в terraform добавляется aws_s3_bucket_logging для access logs
+- в terraform настраивается aws_s3_bucket_lifecycle_configuration для старых версий
+- в terraform настраивается aws_s3_bucket_notification для EventBridge при изменениях
+- через AWS консоли S3 или CLI загружаются файлы
+- в terraform создается aws_s3_bucket_policy для ограничения доступа
+
+Настройка централизованных бэкапов [AWS Backup]:
+- в terraform создается aws_backup_vault с KMS шифрованием
+- создается aws_backup_plan с расписанием для RDS и EBS
+- настраивается aws_backup_selection для автоматического включения ресурсов
+- создается aws_iam_role для AWS Backup service
+- в terraform настраиваются backup windows и retention periods
+
+Создание CI/CD pipeline для автоматического деплоя [CodePipeline + CodeBuild]:
+- создается файл buildspec.yml в корне репозитория с инструкциями сборки Rust
+- в AWS консоли CodeBuild создается проект с Amazon Linux environment
+- в AWS консоли CodePipeline создается pipeline с этапами source, build, deploy
+- в GitHub настраивается webhook или подключается AWS CodeCommit
+- в CodePipeline настраивается deploy action для обновления ECS service
+- в terraform можно автоматизировать создание CodePipeline и CodeBuild проектов
+
+Настройка платформы для запуска контейнеров [ECS + Fargate]:
+- в terraform создается aws_ecs_cluster с именем проекта
+- создается JSON файл task-definition.json с описанием контейнера и ресурсов
+- через AWS CLI выполняется aws ecs register-task-definition для регистрации
+- в terraform создается aws_ecs_service для автоматического управления задачами
+- в terraform настраивается aws_lb_target_group_attachment для интеграции с ALB
+- в terraform добавляется aws_appautoscaling_target для auto scaling
+
+Создание serverless функций для обработки событий [Lambda]:
+- создается код функции в отдельной папке проекта
+- используется cargo lambda для сборки Rust кода в Lambda deployment package
+- через AWS CLI выполняется aws lambda create-function или используется terraform aws_lambda_function
+- в terraform или консоли Lambda настраиваются environment variables
+- в terraform создаются aws_lambda_event_source_mapping для triggers от SQS/Kinesis
+- в terraform добавляются aws_lambda_permission для вызовов от API Gateway
+
+Настройка API Gateway для управления REST/GraphQL API [API Gateway]:
+- в AWS консоли API Gateway создается новый REST API
+- через консоль или terraform определяются ресурсы и HTTP методы
+- в консоли API Gateway настраивается интеграция с Lambda функциями
+- в terraform создается aws_api_gateway_authorizer для JWT или API keys
+- в terraform создается aws_api_gateway_method с cors configuration
+- в terraform добавляется aws_api_gateway_method_response для CORS headers
+- через консоль создается deployment в stages (dev, prod)
+- в CloudWatch включается логирование API Gateway execution и access logs
+
+Настройка балансировщика нагрузки с SSL сертификатами [Application Load Balancer + Certificate Manager]:
+- в AWS консоли Certificate Manager запрашивается SSL сертификат для домена
+- через DNS провайдера добавляется CNAME запись для валидации сертификата
+- в terraform создается aws_lb в публичных подсетях
+- в terraform создаются aws_lb_target_group для ECS сервисов
+- в terraform настраиваются aws_lb_listener на портах 80 и 443
+- в terraform добавляется aws_lb_listener_rule для редиректа HTTP на HTTPS
+
+Создание основной базы данных с автоматическими бэкапами [RDS PostgreSQL]:
+- в terraform создается aws_db_subnet_group в приватных подсетях
+- в terraform создается aws_db_parameter_group с настройками для PostgreSQL
+- в terraform создается aws_db_option_group если нужны дополнительные опции
+- в terraform создается aws_db_instance с engine postgresql
+- в terraform ссылается aws_secretsmanager_secret для master password
+- в terraform настраиваются security groups через vpc_security_group_ids
+- в terraform включаются backup_retention_period и backup_window
+- в terraform включается deletion_protection = true для production
+- в terraform настраивается performance_insights_enabled для мониторинга
+- в terraform включается multi_az = true для высокой доступности
+- в AWS консоли RDS можно мониторить статус создания инстанса
+
+Настройка кэша для улучшения производительности [ElastiCache Redis]:
+- в terraform создается aws_elasticache_subnet_group в приватных подсетях
+- в terraform создается aws_elasticache_replication_group с engine redis
+- в terraform настраиваются security_group_ids для доступа из ECS
+- в terraform включается at_rest_encryption_enabled и transit_encryption_enabled
+- в terraform настраивается automatic_failover_enabled для высокой доступности
+- в приложении используется Redis client library для подключения
+
+Настройка правил безопасности для контроля трафика [Security Groups]:
+- в terraform создается aws_security_group для ALB с ingress rules 80,443 from 0.0.0.0/0
+- в terraform создается aws_security_group для ECS с ingress от ALB security group
+- в terraform создается aws_security_group для RDS с ingress 5432 от ECS security group
+- в terraform создается aws_security_group для ElastiCache с ingress 6379 от ECS
+- создание aws_vpc_security_group_ingress_rule и egress_rule отдельно для better management
+- использование referenced_security_group_id вместо CIDR когда возможно
+- в terraform для каждой группы настраиваются egress rules для исходящего трафика
+
+Защита от базовых веб-атак [AWS WAF]:
+- в terraform создается aws_wafv2_web_acl с managed rule groups
+- в terraform добавляются AWS managed rule groups (AWSManagedRulesCommonRuleSet)
+- в terraform создаются custom rules для rate limiting по IP
+- в terraform создается aws_wafv2_web_acl_association для привязки к ALB
+- в CloudWatch включается WAF logging для анализа блокированных запросов
+
+Настройка аудита и соответствия требованиям [CloudTrail + Config + GuardDuty]:
+- в terraform создается aws_cloudtrail для логирования всех API вызовов
+- в terraform создается aws_s3_bucket для хранения CloudTrail логов
+- в terraform создается aws_config_configuration_recorder для отслеживания изменений
+- в terraform добавляются aws_config_config_rule для проверки compliance
+- включается aws_guardduty_detector для обнаружения угроз
+- настраивается aws_config_delivery_channel для отправки результатов
+
+Настройка базового логирования приложений [CloudWatch Logs]:
+- в terraform создаются aws_cloudwatch_log_group для ECS, Lambda, RDS
+- в terraform настраивается retention_in_days для каждой log group
+- в ECS task definition указывается logDriver awslogs с log group
+- в приложении используется structured logging library (slog для Rust)
+- в AWS консоли CloudWatch Logs можно просматривать и фильтровать логи
+
+Создание алертов для критических метрик [CloudWatch Alarms + SNS]:
+- в terraform создается aws_sns_topic для уведомлений
+- через AWS консоли SNS или terraform добавляются aws_sns_topic_subscription
+- в terraform создаются aws_cloudwatch_metric_alarm для CPU, memory, latency
+- создание custom metrics для business KPI (transactions/sec, error rates)
+- в terraform настраивается aws_cloudwatch_dashboard для операционной команды
+- создание алертов для security events (failed logins, unusual API activity)
+- в приложении используется CloudWatch SDK для отправки custom metrics
+- в terraform настраиваются alarm_actions для отправки в SNS при срабатывании
+
+Создание событийной архитектуры для микросервисов [EventBridge]:
+- в terraform создается aws_cloudwatch_event_bus с custom именем
+- в AWS консоли EventBridge Schema Registry определяются event schemas
+- в terraform создаются aws_cloudwatch_event_rule для роутинга событий
+- в terraform добавляются aws_cloudwatch_event_target для Lambda функций
+- в приложении используется EventBridge SDK для отправки событий
+- в terraform создается aws_sqs_queue как dead letter queue для failed events

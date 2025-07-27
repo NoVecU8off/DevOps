@@ -1,0 +1,173 @@
+Управление состоянием Terraform инфраструктуры [Storage Account + Resource Lock]:
+- через Azure CLI создается storage account для terraform state
+- в storage account создается blob container для state файлов
+- включается versioning для blob container
+- создается файл backend.tf с конфигурацией azurerm backend
+- выполняется terraform init для инициализации remote backend
+- terraform state автоматически сохраняется в Azure Storage при terraform apply
+- настраивается Azure Resource Lock для защиты от случайного удаления
+
+Создание группы ресурсов и настройка сетевой инфраструктуры [Resource Group + Virtual Network]:
+- создается terraform файл main.tf с azurerm_resource_group
+- в terraform создается azurerm_virtual_network с address_space
+- в terraform файле описываются azurerm_subnet для публичных и приватных ресурсов
+- в terraform добавляется azurerm_nat_gateway для исходящего трафика из приватных подсетей
+- в terraform создается azurerm_route_table для маршрутизации трафика
+- в terraform настраиваются azurerm_subnet_route_table_association
+- в terraform добавляются azurerm_private_endpoint для безопасного доступа к PaaS сервисам
+- включается azurerm_network_watcher для мониторинга сетевого трафика
+- выполняется terraform plan и terraform apply для создания инфраструктуры
+
+Настройка управления доступом и ролей [Azure Active Directory + RBAC]:
+- создается terraform файл rbac.tf с azurerm_role_assignment
+- в Azure Portal AAD изучаются существующие built-in роли
+- в terraform создаются azurerm_user_assigned_identity для сервисов
+- в terraform настраиваются azurerm_role_definition если нужны custom роли
+- в terraform создаются роли для Container Instances, Functions, Database access
+- в terraform настраиваются azurerm_role_assignment для связывания identity и ролей
+- выполняется terraform apply для создания ролей в Azure
+
+Настройка хранилища ключей и секретов [Key Vault]:
+- в terraform создается azurerm_key_vault с tenant_id и object_id
+- в terraform настраивается azurerm_key_vault_access_policy для доступа сервисов
+- в terraform создаются azurerm_key_vault_secret для database credentials
+- в terraform добавляется azurerm_key_vault_key для шифрования дисков и данных
+- включается soft_delete_retention_days и purge_protection
+- в terraform настраивается enable_rbac_authorization для RBAC модели доступа
+- в приложении используется Azure SDK для получения секретов во время выполнения
+
+Настройка приватного реестра для Docker образов [Container Registry]:
+- в terraform создается azurerm_container_registry с именем проекта
+- в terraform настраивается admin_enabled = false для security
+- в terraform включается azurerm_container_registry_scope_map для fine-grained access
+- включается vulnerability scanning через Azure Defender for container registries
+- в terraform настраиваются azurerm_container_registry_webhook для CI/CD
+- через Azure CLI выполняется az acr login для аутентификации docker
+- в CI/CD скриптах используется docker push для загрузки образов
+
+Хранение статических файлов и бэкапов [Storage Account]:
+- в terraform создается azurerm_storage_account с globally unique именем
+- в terraform создается azurerm_storage_container для blob storage
+- в terraform включается versioning через is_versioning_enabled
+- в terraform настраивается azurerm_storage_account_network_rules для доступа
+- в terraform добавляется lifecycle management через azurerm_storage_management_policy
+- включается encryption at rest через customer_managed_key
+- в terraform настраивается azurerm_monitor_diagnostic_setting для access logs
+- в terraform создается azurerm_storage_account_customer_managed_key для шифрования
+
+Настройка централизованных бэкапов [Azure Backup]:
+- в terraform создается azurerm_recovery_services_vault
+- создается azurerm_backup_policy_vm для виртуальных машин
+- создается azurerm_backup_policy_file_share для файловых ресурсов
+- настраивается azurerm_backup_protected_vm для автоматического включения ресурсов
+- в terraform настраиваются backup retention policies и schedules
+- включается Azure Backup для PostgreSQL databases
+
+Создание CI/CD pipeline для автоматического деплоя [Azure DevOps Pipelines]:
+- создается azure-pipelines.yml в корне репозитория с инструкциями сборки Rust
+- в Azure DevOps создается новый project и подключается Git repository
+- в Azure Pipelines создается pipeline с этапами build, test, deploy
+- настраивается Service Connection для доступа к Azure ресурсам
+- в pipeline настраивается deploy stage для обновления Container Instances
+- в terraform можно автоматизировать создание через azurerm_devops_project
+
+Настройка платформы для запуска контейнеров [Container Instances + AKS]:
+- в terraform создается azurerm_container_group для simple deployments
+- создается YAML файл с описанием контейнера и ресурсов
+- через Azure CLI выполняется az container create для развертывания
+- в terraform создается azurerm_kubernetes_cluster для complex workloads
+- в terraform настраивается azurerm_kubernetes_cluster_node_pool для scaling
+- включается Azure AD integration для AKS через role_based_access_control
+
+Создание serverless функций для обработки событий [Azure Functions]:
+- создается код функции в отдельной папке проекта
+- используется Azure Functions Core Tools для сборки Rust кода
+- в terraform создается azurerm_function_app с runtime Rust
+- в terraform настраиваются azurerm_function_app_slot для staging deployments
+- в terraform создаются triggers через azurerm_eventgrid_event_subscription
+- в terraform добавляются connection strings через app_settings
+
+Настройка API Management для управления REST/GraphQL API [API Management]:
+- в terraform создается azurerm_api_management с sku tier
+- в terraform определяются azurerm_api_management_api для REST endpoints
+- в terraform настраивается azurerm_api_management_backend для Functions integration
+- в terraform создается azurerm_api_management_subscription для API keys
+- в terraform настраивается azurerm_api_management_policy для CORS и rate limiting
+- включается Azure AD authentication через azurerm_api_management_identity_provider_aad
+- в Azure Monitor включается логирование API calls и metrics
+
+Настройка балансировщика нагрузки с SSL сертификатами [Application Gateway + SSL Certificates]:
+- в terraform создается azurerm_public_ip для Application Gateway
+- через Azure Portal или CLI запрашивается managed certificate для домена
+- в terraform создается azurerm_application_gateway в публичной подсети
+- в terraform настраиваются backend_address_pool для container targets
+- в terraform настраиваются http_listener на портах 80 и 443
+- в terraform добавляется redirect_configuration для HTTP на HTTPS
+- включается Web Application Firewall через azurerm_web_application_firewall_policy
+
+Создание основной базы данных с автоматическими бэкапами [Azure Database for PostgreSQL]:
+- в terraform создается azurerm_postgresql_flexible_server
+- в terraform настраивается azurerm_postgresql_flexible_server_database
+- в terraform ссылается azurerm_key_vault_secret для administrator password
+- в terraform настраиваются delegated_subnet_id для private access
+- в terraform включаются backup_retention_days и geo_redundant_backup_enabled
+- в terraform настраивается high_availability для zone redundancy
+- включается Microsoft Defender for Azure SQL для security monitoring
+- в terraform добавляется azurerm_postgresql_flexible_server_configuration для tuning
+
+Настройка кэша для улучшения производительности [Azure Cache for Redis]:
+- в terraform создается azurerm_redis_cache с sku_name Standard или Premium
+- в terraform настраиваются subnet_id для private deployment
+- в terraform включается enable_non_ssl_port = false для security
+- в terraform настраивается redis_configuration для persistence
+- включается zone redundancy через zones parameter
+- в приложении используется Redis client library для подключения
+
+Настройка правил безопасности для контроля трафика [Network Security Groups]:
+- в terraform создается azurerm_network_security_group для web tier
+- в terraform создается azurerm_network_security_group для app tier
+- в terraform создается azurerm_network_security_group для database tier
+- в terraform добавляются azurerm_network_security_rule для each tier
+- использование source_application_security_group_ids вместо IP ranges
+- в terraform настраиваются azurerm_subnet_network_security_group_association
+- включается flow logging через azurerm_network_watcher_flow_log
+
+Защита от базовых веб-атак [Web Application Firewall]:
+- в terraform создается azurerm_web_application_firewall_policy
+- в terraform добавляются managed_rules с OWASP rule sets
+- в terraform создаются custom_rules для rate limiting по IP
+- в terraform настраивается association с Application Gateway
+- в Azure Monitor включается WAF logging для анализа блокированных запросов
+- включается bot protection через azurerm_web_application_firewall_policy
+
+Настройка аудита и соответствия требованиям [Monitor + Security Center + Sentinel]:
+- в terraform создается azurerm_log_analytics_workspace для централизованного логирования
+- в terraform включается azurerm_security_center_subscription_pricing для Defender
+- в terraform создается azurerm_monitor_diagnostic_setting для всех ресурсов
+- включается Azure Sentinel для SIEM capabilities
+- настраивается Azure Policy через azurerm_policy_assignment для compliance
+- в terraform добавляются azurerm_monitor_activity_log_alert для security events
+
+Настройка базового логирования приложений [Monitor Logs]:
+- в terraform создаются azurerm_log_analytics_workspace
+- в terraform настраивается retention_in_days для workspace
+- в Container Instances указывается log_analytics для log forwarding
+- в приложении используется structured logging library (slog для Rust)
+- в Azure Portal Monitor можно просматривать и запрашивать логи через KQL
+
+Создание алертов для критических метрик [Monitor Alerts + Action Groups]:
+- в terraform создается azurerm_monitor_action_group для уведомлений
+- в terraform добавляются email_receiver и sms_receiver в action group
+- в terraform создаются azurerm_monitor_metric_alert для CPU, memory, latency
+- создание custom metrics для business KPI через Application Insights
+- в terraform настраивается azurerm_application_insights для APM
+- создание алертов для security events через azurerm_monitor_scheduled_query_rules_alert
+- в приложении используется Application Insights SDK для custom metrics
+
+Создание событийной архитектуры для микросервисов [Event Grid]:
+- в terraform создается azurerm_eventgrid_topic с custom именем
+- в Azure Portal Event Grid определяются event schemas
+- в terraform создаются azurerm_eventgrid_event_subscription для роутинга событий
+- в terraform добавляются azurerm_eventgrid_event_subscription для Functions
+- в приложении используется Event Grid SDK для отправки событий
+- в terraform создается azurerm_servicebus_queue как dead letter queue для failed events

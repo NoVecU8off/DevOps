@@ -1,0 +1,60 @@
+1. Вычисления и контейнеризация:
+Compute Engine: виртуальные серверы для запуска Rust-приложений с custom machine types
+Google Kubernetes Engine (GKE): оркестрация контейнеров для микросервисной архитектуры с Autopilot mode
+Cloud Functions: serverless функции для обработки транзакций и событий с automatic scaling
+Cloud Run: serverless контейнеры без управления кластером с concurrency control
+Artifact Registry: registry для хранения Docker образов с vulnerability scanning и binary authorization
+
+2. Базы данных:
+Cloud SQL PostgreSQL: реляционные БД для финансовых данных и ACID транзакций с read replicas
+Cloud Firestore: NoSQL для высокочастотной торговли и real-time данных с multi-region replication
+Cloud Bigtable: для временных рядов и high-throughput финансовых данных с automatic scaling
+Memorystore for Redis: кэширование для низкой латентности с high availability и persistence
+Cloud Spanner: глобально распределенная реляционная БД с ACID гарантиями для critical workloads
+
+3. Безопасность:
+Identity and Access Management (IAM): управление доступами с fine-grained permissions
+Cloud Key Management Service (KMS): управление ключами шифрования с HSM support
+Security Command Center: обнаружение угроз и vulnerability assessment с real-time alerts
+Secret Manager: безопасное хранение API ключей и токенов с automatic rotation
+Cloud Armor: защита веб-приложений от атак с adaptive protection и rate limiting
+
+4. Сеть и API:
+API Gateway: управление API с authentication и rate limiting
+Cloud CDN: CDN для глобального доступа с Google's edge network
+Virtual Private Cloud (VPC): изолированные сетевые среды с private Google access
+Cloud Load Balancing: распределение нагрузки с SSL termination и global distribution
+Managed Instance Groups: автоматическое масштабирование с preemptible instances
+
+5. Данные и аналитика:
+Pub/Sub + Dataflow: потоковая обработка данных в real-time с Apache Beam
+BigQuery: хранилище данных для аналитики с SQL-совместимостью и ML integration
+Cloud Data Fusion: ETL для обработки больших объемов данных с visual pipeline designer
+Looker/Data Studio: бизнес-аналитика с real-time dashboards и collaboration features
+Dataproc: managed Hadoop/Spark для big data processing с preemptible workers
+
+6. Интеграции и сообщения:
+Eventarc: событийно-ориентированная архитектура с CloudEvents support
+Pub/Sub: очереди сообщений для надежной обработки с exactly-once delivery
+Cloud Tasks: асинхронная обработка задач с retry logic и scheduling
+Cloud Scheduler: cron-like задачи с HTTP/Pub/Sub targets
+Apigee: enterprise API management с analytics и developer portal
+
+7. Мониторинг и логирование:
+Cloud Operations Suite (Stackdriver): метрики, логи и трейсы в едином интерфейсе
+Cloud Audit Logs: аудит API вызовов и resource changes с tamper-proof logging
+Cloud Monitoring: alerting и custom metrics с SLI/SLO management
+Cloud Logging: централизованное логирование с structured logs и retention policies
+Cloud Trace: distributed tracing для performance analysis
+
+8. Дополнительные GCP-специфичные сервисы:
+Workflows: serverless workflow orchestration для financial processes с error handling
+Cloud AI Platform: ML/AI сервисы для fraud detection и document processing с AutoML
+Cloud Build: CI/CD платформа с container-native builds и trigger automation
+Chronicle: cloud-native SIEM для security operations center с threat intelligence
+Cloud Identity: enterprise identity management с SSO и multi-factor authentication
+Binary Authorization: deployment security с image signing и attestation policies
+Cloud Asset Inventory: resource management и compliance tracking с policy enforcement
+Cloud Data Loss Prevention (DLP): обнаружение и защита sensitive data с de-identification
+Cloud HSM: hardware security modules для highest-level key protection
+Anthos: hybrid/multi-cloud platform для consistent deployment across environments
