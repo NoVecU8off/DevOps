@@ -1,0 +1,259 @@
+Установка и базовая настройка [Initial Setup]:
+- скачивается Terraform binary с official website или через package manager (brew, apt, yum)
+- добавляется terraform в PATH через ~/.bashrc или ~/.zshrc
+- устанавливается terraform-ls для IDE support в VS Code или IntelliJ
+- создается ~/.terraformrc с credential helpers для cloud providers
+- настраивается tfenv для version management и switching между версиями
+- устанавливается tflint для static analysis и best practices validation
+- добавляется terraform-docs для automatic documentation generation
+- настраивается pre-commit hooks для code quality enforcement
+
+Основы языка HCL и структура проекта [Project Structure]:
+- создается main.tf в корне проекта с provider configuration
+- настраивается variables.tf для input parameters с type validation
+- используется outputs.tf для exposing important resource attributes
+- применяется terraform.tfvars для environment-specific values
+- создается versions.tf для provider version constraints
+- настраивается locals.tf для computed values и resource naming
+- используется data.tf для querying existing infrastructure resources
+- создается modules/ directory для reusable infrastructure components
+
+Управление состоянием [State Management]:
+- создается remote backend в S3/Azure Storage/GCS для shared state
+- настраивается state locking через DynamoDB/Azure Table/Cloud Storage
+- используется terraform workspace для environment separation (dev/staging/prod)
+- применяется state encryption для sensitive infrastructure data
+- настраивается backup strategy для state files с versioning
+- используется terraform import для existing resources integration
+- применяется state manipulation через terraform state commands
+- настраивается state isolation между teams и projects
+
+Структура enterprise проекта [Enterprise Organization]:
+- создается environments/ directory с separate folders для dev/staging/prod
+- настраивается modules/ directory с reusable infrastructure components
+- используется global/ directory для shared resources (IAM, Route53, KMS)
+- применяется shared/ directory для common variables и locals
+- создается separate backend configuration для each environment
+- настраивается consistent naming convention across all resources
+- используется modular approach для better maintainability
+- применяется DRY principle через module composition
+
+Безопасность и compliance [Security Configuration]:
+- используется encrypted state storage с customer-managed KMS keys
+- настраивается least privilege IAM policies для Terraform execution
+- применяется secret scanning через tools like truffleHog или GitLeaks
+- используется policy as code через Open Policy Agent (OPA) или Sentinel
+- настраивается compliance validation через AWS Config/Azure Policy
+- применяется mandatory resource tagging strategy для governance
+- используется encryption at rest для all stateful resources
+- настраивается audit logging для infrastructure changes tracking
+
+Variables и типы данных [Variable Management]:
+- создается variables.tf с type constraints и validation rules
+- настраивается default values для optional parameters
+- используется complex data types (object, list, map) для structured configuration
+- применяется variable validation для business rule enforcement
+- настраивается sensitive variables marking для credential protection
+- используется description fields для comprehensive documentation
+- создается variable precedence strategy (CLI, files, environment)
+- настраивается environment-specific tfvars files
+
+Locals и computed values [Local Values]:
+- создается locals.tf для computed values и transformations
+- настраивается common tags strategy для all resources
+- используется resource naming conventions через local values
+- применяется environment-specific configuration mapping
+- настраивается complex data transformations через functions
+- используется conditional logic для environment-based settings
+- создается reusable expressions для repeated calculations
+- настраивается dynamic resource naming patterns
+
+Data sources для существующей инфраструктуры [Data Sources]:
+- используется data sources для querying existing VPCs, subnets, AMIs
+- настраивается filtering через tags или attributes
+- применяется cross-stack references через terraform_remote_state
+- используется external data sources для API integration
+- настраивается dependency management между data sources
+- применяется data source caching для performance optimization
+- используется template data source для dynamic configuration
+- настраивается external script integration через external data source
+
+Модули для переиспользования [Module Development]:
+- создается module structure с variables.tf, main.tf, outputs.tf
+- настраивается module versioning через Git tags или registry
+- используется module composition для complex infrastructure
+- применяется module testing через automated validation
+- настраивается module documentation через terraform-docs
+- используется module registry для centralized distribution
+- создается module examples для usage demonstration
+- настраивается module validation rules для input constraints
+
+Lifecycle management [Resource Lifecycle]:
+- используется lifecycle rules для preventing accidental resource deletion
+- настраивается create_before_destroy для zero-downtime updates
+- применяется ignore_changes для excluding specific attributes
+- используется null_resource для custom provisioning logic
+- настраивается resource dependencies через depends_on
+- применяется conditional resource creation через count или for_each
+- используется resource replacement triggers
+- настраивается graceful resource destruction procedures
+
+Conditional resources и dynamic blocks [Conditional Logic]:
+- используется count parameter для conditional resource creation
+- настраивается for_each для dynamic resource generation
+- применяется conditional expressions для environment-based logic
+- используется dynamic blocks для repeating nested blocks
+- настраивается complex conditional logic через local values
+- применяется resource filtering through conditional statements
+- используется map iteration для dynamic configuration
+- настраивается environment-specific resource variations
+
+Outputs и cross-stack references [Output Management]:
+- создается outputs.tf для exposing important resource attributes
+- настраивается sensitive output marking для credential protection
+- используется output descriptions для clear documentation
+- применяется cross-stack communication через remote state
+- настраивается output formatting для complex data structures
+- используется output dependencies для proper sequencing
+- создается output validation для ensuring correctness
+- настраивается output consumption patterns в dependent stacks
+
+Workspace management [Environment Separation]:
+- создается separate workspaces для dev, staging, production environments
+- настраивается workspace-specific variable files
+- используется terraform.workspace variable для conditional logic
+- применяется workspace isolation для state separation
+- настраивается workspace naming conventions
+- используется workspace-specific backend configurations
+- создается workspace switching automation в CI/CD
+- настраивается workspace cleanup procedures
+
+State manipulation [Advanced State Operations]:
+- используется terraform import для incorporating existing resources
+- настраивается terraform state mv для resource reorganization
+- применяется terraform state rm для removing resources from state
+- используется terraform state list для inventory management
+- настраивается terraform state show для resource inspection
+- применяется terraform state replace-provider для provider migration
+- используется terraform refresh для state synchronization
+- настраивается state backup procedures before major operations
+
+Provider configuration [Multi-Provider Setup]:
+- настраивается provider version constraints в versions.tf
+- используется multiple provider instances для cross-region deployments
+- применяется provider aliases для different configurations
+- настраивается provider authentication через various methods
+- используется default_tags для consistent resource tagging
+- применяется provider-specific configuration options
+- настраивается provider upgrade procedures
+- используется provider dependency management
+
+Testing и validation [Infrastructure Testing]:
+- создается validation rules для input variables
+- настраивается check blocks для infrastructure assertions
+- используется terraform validate для syntax checking
+- применяется tflint для best practices validation
+- настраивается security scanning через tfsec или checkov
+- используется terratest для automated infrastructure testing
+- создается integration testing procedures
+- настраивается continuous validation в CI/CD pipeline
+
+Functions и expressions [Built-in Functions]:
+- используется string functions для text manipulation
+- настраивается collection functions для data transformation
+- применяется date/time functions для timestamp handling
+- используется numeric functions для calculations
+- настраивается conditional expressions для logic implementation
+- применяется template functions для dynamic content generation
+- используется type conversion functions для data casting
+- настраивается complex expressions для advanced logic
+
+CI/CD integration [Pipeline Integration]:
+- создается GitHub Actions workflow для Terraform automation
+- настраивается GitLab CI/CD pipeline с Terraform stages
+- используется automated terraform fmt checking
+- применяется terraform plan в pull request validation
+- настраивается automated terraform apply для non-production
+- используется manual approval gates для production deployments
+- создается artifact storage для plan files
+- настраивается notification systems для deployment status
+
+Error handling и debugging [Troubleshooting]:
+- включается debug logging через TF_LOG environment variable
+- используется terraform plan -detailed-exitcode для CI/CD integration
+- применяется targeted operations для specific resource management
+- настраивается terraform graph для dependency visualization
+- используется terraform console для interactive debugging
+- применяется state inspection для troubleshooting issues
+- настраивается error recovery procedures
+- используется validation commands для syntax checking
+
+Security scanning и compliance [Security Tools]:
+- устанавливается tfsec для security vulnerability scanning
+- настраивается checkov для policy compliance checking
+- используется terrascan для security best practices validation
+- применяется conftest для policy as code enforcement
+- настраивается automated security scanning в CI/CD
+- используется drift detection для configuration monitoring
+- создается security baseline через policy definitions
+- настраивается compliance reporting automation
+
+Cost optimization [FinOps Integration]:
+- применяется mandatory cost allocation tags для all resources
+- настраивается environment-specific resource sizing
+- используется scheduled scaling для cost savings
+- применяется spot instances для non-critical workloads
+- настраивается resource right-sizing based на environment
+- используется automated cost monitoring через tags
+- создается cost optimization policies
+- настраивается budget alerts через resource tagging
+
+Disaster recovery patterns [DR Implementation]:
+- настраивается cross-region resource replication
+- используется automated backup strategies для stateful resources
+- применяется multi-AZ deployment patterns
+- настраивается point-in-time recovery для databases
+- используется infrastructure backup через snapshots
+- применяется disaster recovery testing procedures
+- настраивается RTO/RPO targets для different tiers
+- используется automated failover mechanisms
+
+Monitoring и alerting [Observability]:
+- создается CloudWatch dashboards для infrastructure monitoring
+- настраивается metric alarms для critical thresholds
+- используется SNS topics для alert distribution
+- применяется log aggregation для centralized monitoring
+- настраивается custom metrics для business KPIs
+- используется distributed tracing для request tracking
+- создается health check endpoints для services
+- настраивается automated incident response
+
+Advanced patterns [Enterprise Patterns]:
+- создается module composition для complex applications
+- настраивается resource factories через for_each patterns
+- используется data transformation для complex mappings
+- применяется conditional module usage
+- настраивается dynamic resource generation
+- используется advanced templating для configuration
+- создается multi-layer abstraction patterns
+- настраивается enterprise governance frameworks
+
+Production deployment [Operations]:
+- создается deployment checklists для production changes
+- настраивается automated health checking
+- используется infrastructure as code для consistent deployments
+- применяется capacity planning через predictive analytics
+- настраивается automated scaling policies
+- используется performance profiling для optimization
+- создается incident response procedures
+- настраивается maintenance windows для planned activities
+
+Migration и upgrade strategies [Lifecycle Management]:
+- создается zero-downtime migration procedures
+- настраивается version compatibility testing
+- используется blue-green deployment для infrastructure
+- применяется canary deployment для gradual rollouts
+- настраивается rollback procedures для failed deployments
+- используется automated migration testing
+- создается upgrade documentation и runbooks
+- настраивается emergency rollback capabilities
